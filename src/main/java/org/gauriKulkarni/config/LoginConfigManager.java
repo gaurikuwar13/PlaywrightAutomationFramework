@@ -13,4 +13,6 @@ public class LoginConfigManager {
     private String eventHubUsername;
     @Value("${eventHubPassword}")
     private String eventHubPassword;
+    @Value("${sessionHandleLink}")
+    private String sessionHandleLink;
 }

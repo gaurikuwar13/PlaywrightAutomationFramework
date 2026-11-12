@@ -1,11 +1,10 @@
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.*;
 
 import org.gauriKulkarni.config.DriverManager;
 import org.gauriKulkarni.config.LoginConfigManager;
 import org.gauriKulkarni.pages.EventHubLoginPage;
+import org.gauriKulkarni.pages.LoginPraticePage;
+import org.gauriKulkarni.pages.MakeEventBookingPage;
 import org.gaurikulkarni.TestSpringConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +26,10 @@ public class InitializeContext extends AbstractTestNGSpringContextTests {
 
     @Autowired
     EventHubLoginPage eventHubLoginPage;
+    @Autowired
+    MakeEventBookingPage makeEventBookingPage;
+    @Autowired
+    LoginPraticePage loginPraticePage;
     // Use ThreadLocal to ensure thread-safety during parallel test execution
     private static final ThreadLocal<Playwright> playwrightThread = new ThreadLocal<>();
     private static final ThreadLocal<Browser> browserThread = new ThreadLocal<>();
@@ -41,7 +44,9 @@ public class InitializeContext extends AbstractTestNGSpringContextTests {
         Browser browser =  isBrowserHeadless?
                 browserType.launch():browserType.launch(new BrowserType.LaunchOptions().setHeadless(false));
         browserThread.set(browser);
-        Page page = browser.newPage();
+        BrowserContext browserContext = browser.newContext();
+        Page page = browserContext.newPage();
+        DriverManager.setBrowserContext(browserContext);
         DriverManager.setPage(page);
     }
     public BrowserType setTheBrowser(Playwright playwright, String browserType){
